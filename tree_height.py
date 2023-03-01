@@ -5,12 +5,9 @@ import threading
 
 
 def compute_height(n, parents):
-    # Write this function
-    #max_height = 0
-    # Your code here
-    #return max_height
-    tree = {}
-    root = None 
+  
+    tree = [[] for _ in range(n)]
+    root = 0
     for i in range(n):
         parent = parents[i]
         if parent == -1:
@@ -18,24 +15,18 @@ def compute_height(n, parents):
         else:
             tree[parent] =[i]
 
-    def compute_subtree_height(node):
-        if node not in tree:
-            return 1
-        subtree_heights = [compute_subtree_height(child)for child in tree[node]]
-        return max(subtree_heights) +1
+def dfs(node):
+    max_height = 0
+    for child in tree[node]:
+        height = dfs(child)
+        max_height = max(max_height, height)
+    return max_height + 1
      
-    return compute_subtree_height(root)
+    return dfs(root)
 
 
 def main():
-    # implement input form keyboard and from files
-    
-    # let user input file name to use, don't allow file names with letter a
-    # account for github input inprecision
-    
-    # input number of elements
-    # input values in one variable, separate with space, split these values in an array
-    # call the function and output it's result
+   
     n = int(input())
     parents = list(map(int,input().split()))
 
@@ -48,4 +39,3 @@ def main():
 sys.setrecursionlimit(10**7)  # max depth of recursion
 threading.stack_size(2**27)   # new thread will get stack of such size
 threading.Thread(target=main).start()
-
