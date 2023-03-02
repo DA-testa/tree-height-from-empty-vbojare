@@ -1,50 +1,44 @@
-def compute_height(n, parents):
-    
-    adj_list = [[] for _ in range(n)]
+import sys
+import threading
+
+def build_tree(n, parents):
+    tree = [[] for _ in range(n)]
     for i in range(n):
-        if parents[i] == -1:
+        parent = parents[i]
+        if parent == -1:
             root = i
         else:
-            adj_list[parents[i]].append(i)
+            tree[parent].append(i)
+    return tree, root
 
-    
-    def dfs(node):
-        heights = []
-        for child in adj_list[node]:
-            heights.append(dfs(child))
-        if not heights:
-            return 0
-        return max(heights) + 1
+def dfs(node, depth, tree):
+    if not tree[node]:
+        return depth
+    max_depth = depth
+    for child in tree[node]:
+        max_depth = max(max_depth, dfs(child, depth+1, tree))
+    return max_depth
 
-    return dfs(root)
+def compute_height(n, parents):
+    tree, root = build_tree(n, parents)
+    max_height = dfs(root, 1, tree)
+    return max_height
 
-
-
-try:
-    n = int(input())
-    parents = list(map(int, input().split()))
-    assert len(parents) == n
-    assert all(p == -1 or 0 <= p < n for p in parents)
-except:
-    print('Invalid input')
-    exit()
-
-
-print(compute_height(n, parents))
-
-
-filename = input('Enter file name: ')
-if 'a' in filename:
-    print('Invalid file name')
-else:
+def main():
+    filename = input("Enter file name: ")
+    if 'a' in filename:
+        print("Invalid file name")
+        return
     try:
-        with open(filename, 'r') as f:
-            n = int(f.readline())
-            parents = list(map(int, f.readline().split()))
-            assert len(parents) == n
-            assert all(p == -1 or 0 <= p < n for p in parents)
-    except:
-        print('Invalid file')
-        exit()
+        with open(filename, 'r') as file:
+            n = int(file.readline().strip())
+            parents = list(map(int, file.readline().strip().split()))
+    except FileNotFoundError:
+        print("File not found")
+        return
+    max_height = compute_height(n, parents)
+    print(max_height)
 
-    print(compute_height(n, parents))
+sys.setrecursionlimit(10**7)
+threading.stack_size(2**27)
+threading.Thread(target=main).start()
