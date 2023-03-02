@@ -1,41 +1,50 @@
-# python3
-
-import sys 
-import threading
-
 def compute_height(n, parents):
-    tree = {}
+    
+    adj_list = [[] for _ in range(n)]
     for i in range(n):
         if parents[i] == -1:
             root = i
         else:
-            if parents[i] not in tree:
-                tree[parents[i]] = []
-            tree[parents[i]].append(i)
-    return dfs(tree, root)
+            adj_list[parents[i]].append(i)
 
-def dfs(tree, node):
-    if node not in tree:
-        return 1
-    heights = [dfs(tree, child) for child in tree[node]]
-    return max(heights) + 1
+    
+    def dfs(node):
+        heights = []
+        for child in adj_list[node]:
+            heights.append(dfs(child))
+        if not heights:
+            return 0
+        return max(heights) + 1
 
-def main():
-    filename = input("")
-    while 'a' in filename:
-        filename = input("Invalid file name. Please enter a different file name: ")
+    return dfs(root)
+
+
+
+try:
+    n = int(input())
+    parents = list(map(int, input().split()))
+    assert len(parents) == n
+    assert all(p == -1 or 0 <= p < n for p in parents)
+except:
+    print('Invalid input')
+    exit()
+
+
+print(compute_height(n, parents))
+
+
+filename = input('Enter file name: ')
+if 'a' in filename:
+    print('Invalid file name')
+else:
     try:
-        with open(filename, 'r') as file:
-            n = int(file.readline())
-            parents = list(map(int, file.readline().split()))
-    except FileNotFoundError:
-        print("File not found.")
-        return
+        with open(filename, 'r') as f:
+            n = int(f.readline())
+            parents = list(map(int, f.readline().split()))
+            assert len(parents) == n
+            assert all(p == -1 or 0 <= p < n for p in parents)
+    except:
+        print('Invalid file')
+        exit()
+
     print(compute_height(n, parents))
-
-sys.setrecursionlimit(10**7)  
-threading.stack_size(2**27)   
-threading.Thread(target=main).start()
-
-
-
