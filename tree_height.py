@@ -25,7 +25,7 @@ def compute_height(n, parents):
       if len(sys.argv) > 1:
         filename = sys.argv[1]
         if "a" in filename:
-            print("")
+            print("Error: Filename cannot contain the letter 'a'")
             return
         try:
             with open(filename) as f:
