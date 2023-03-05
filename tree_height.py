@@ -21,12 +21,11 @@ def compute_height(n, parents):
 
     return compute_height_rec(parents.index(-1))
 
-
-def main():
-    if len(sys.argv) > 1:
+ def main():
+      if len(sys.argv) > 1:
         filename = sys.argv[1]
         if "a" in filename:
-            print("Error: Filename cannot contain the letter 'a'")
+            print("")
             return
         try:
             with open(filename) as f:
@@ -35,15 +34,15 @@ def main():
         except FileNotFoundError:
             print(f"Error: File '{filename}' not found")
             return
-    else:
+      else:
         print("Enter input:")
         n = int(input())
         parents = list(map(int, input().split()))
 
-    try:
+      try:
         height = compute_height(n, parents)
         print(height)
-    except ValueError as e:
+      except ValueError as e:
         print("Error:", e)
 
 
