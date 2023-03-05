@@ -23,36 +23,28 @@ def compute_height(n, parents):
 
 
 def main():
-    print("Select input source:")
-    print("1. Keyboard")
-    print("2. File")
-    source = input()
-
-    if source == "2":
-        filename = input("Enter file name: ")
-        
-        if 'a' in filename:
-            print("Error: File name should not contain letter 'a'")
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+        if "a" in filename:
+            print("Error: Filename cannot contain the letter 'a'")
             return
-        
         try:
-            with open(filename, 'r') as file:
-                n = int(file.readline())
-                parents = list(map(int, file.readline().split()))
+            with open(filename) as f:
+                n = int(f.readline())
+                parents = list(map(int, f.readline().split()))
         except FileNotFoundError:
-            print("Error: File not found")
+            print(f"Error: File '{filename}' not found")
             return
     else:
-        try:
-            n = int(input("Enter number of elements: "))
-            parents_str = input("Enter the list of parents separated by space: ")
-            parents = list(map(int, parents_str.split()))
-        except ValueError:
-            print("Error: Invalid input")
-            return
+        print("Enter input:")
+        n = int(input())
+        parents = list(map(int, input().split()))
 
-    height = compute_height(n, parents)
-    print(height)
+    try:
+        height = compute_height(n, parents)
+        print(height)
+    except ValueError as e:
+        print("Error:", e)
 
 
 sys.setrecursionlimit(10**7)
