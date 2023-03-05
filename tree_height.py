@@ -18,7 +18,7 @@ def compute_height(n, parents):
         if not tree[node]:
             return 1
         return max(compute_height_rec(child) for child in tree[node]) + 1
-
+ 
     return compute_height_rec(parents.index(-1))
 
  def main():
